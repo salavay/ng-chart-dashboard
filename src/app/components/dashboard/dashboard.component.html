@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="actions">
+    <div class="date-picker-group">
+      <mat-form-field class="date-picker">
+        <mat-date-range-input [formGroup]="rangePicker" [rangePicker]="picker">
+          <input matStartDate [value]="startDate()" (dateChange)="startDateChanged($event.value)"
+                 placeholder="Start date"
+                 formControlName="startDate">
+          <input matEndDate [value]="endDate()" (dateChange)="endDateChanged($event.value)"
+                 placeholder="End date"
+                 formControlName="endDate">
+        </mat-date-range-input>
+        <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <button mat-icon-button (click)="refreshCharts()"
+              [matBadge]="needToRefresh() ? 0 : null" matBadgeColor="warn" matBadgeSize="small"
+              class="hide-text">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+    <button mat-raised-button (click)="addChart()" class="add-chart-button">Add chart</button>
+  </div>
+  <div class="chart-container">
+    @for (chartConfig of chartConfigurations();track chartConfig.title) {
+      <app-chart
+        [title]="chartConfig.title"
+        [type]="chartConfig.type"
+        [data]="chartConfig.data"
+        (onEdit)="editChart(chartConfig)"
+        (onDelete)="deleteChart(chartConfig)"></app-chart>
+    }
+  </div>
+</div>

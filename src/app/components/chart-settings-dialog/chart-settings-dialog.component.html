@@ -1,0 +1,54 @@
+<h1 mat-dialog-title>Create Chart</h1>
+<div mat-dialog-content [formGroup]="formGroup" class="form-fields">
+  <mat-form-field>
+    <mat-label>Title</mat-label>
+    <input matInput required
+           #titleInput
+           [value]="title()"
+           (change)="title.set(titleInput.value)"
+           formControlName="title"
+           placeholder="Write title"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Chart Type</mat-label>
+    <mat-select required
+                [value]="selectedChartType()"
+                (valueChange)="selectedChartType.set($event)"
+                formControlName="selectedChartType"
+    >
+      <mat-option value="line">Line</mat-option>
+      <mat-option value="bar">Bar</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Dataset</mat-label>
+    <mat-select multiple required
+                [value]="selectedDatasetLabels()"
+                (valueChange)="onDataSetSelect($event)"
+                formControlName="selectedDatasetLabels"
+    >
+      @for (dataset of allDatasetsOptions();track dataset) {
+        <mat-option [value]="dataset">{{ dataset }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @for (dataset of selectedDatasets();track dataset) {
+    <mat-form-field formGroupName="dataSetColors">
+      <mat-label>Color for '{{dataset.label}}'</mat-label>
+      <input matInput
+             #colorInput
+             [value]="dataset.color"
+             (change)="dataset.color = colorInput.value"
+             formControlName="datasetColor-{{dataset.label}}"
+             placeholder="Write color"/>
+    </mat-form-field>
+  }
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close title="Cancel">Cancel</button>
+  <button mat-button (click)="close()" [disabled]="!formGroup.valid"
+          [title]="isEditMode ? 'Edit' : 'Create'">{{ isEditMode ? 'Edit' : 'Create' }}
+  </button>
+</div>
